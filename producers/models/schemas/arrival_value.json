@@ -3,12 +3,11 @@
   "name": "arrival.value",
   "type": "record",
   "fields": [
-    {"name": "station_id", "type": "integer"},
-    {"name": "train_id", "type": "string"},
-    {"name": "direction", "type": "string"},
-    {"name": "line", "type": "string"},
-    {"name": "train_status", "type": "string"},
-    {"name": "prev_station_id", "type": "integer"},
-    {"name": "prev_direction", "type": "string"}
+    {"name": "id", "type": "integer"},
+    {"name": "color", "type": "string"},
+    {"name": "direction_a", "type": "string"},
+    {"name": "direction_b", "type": "string"},
+    {"name": "a_train", "type": "string"},
+    {"name": "b_train", "type": "string"}
   ]
 }
