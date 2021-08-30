@@ -54,12 +54,6 @@ class Producer:
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
-        #
-        #
-        # TODO: Write code that creates the topic for this producer if it does not already exist on
-        # the Kafka Broker.
-        #
-        #
         topic = NewTopic(topic=self.topic_name, partitions=self.num_partitions, replicas=self.num_replicas)
 
         start = self.time_millis()
