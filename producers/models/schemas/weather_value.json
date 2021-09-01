@@ -3,7 +3,13 @@
   "name": "weather.value",
   "type": "record",
   "fields": [
-    {"name": "temperature", "type": "double"},
-    {"name": "status", "type": "string"}
+    {
+      "name": "temperature",
+      "type": "double"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    }
   ]
 }
