@@ -4,8 +4,8 @@ from pathlib import Path
 
 from confluent_kafka import avro
 
-from .turnstile import Turnstile
-from .producer import Producer
+from models.turnstile import Turnstile
+from models.producer import Producer
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,9 @@ class Station(Producer):
                 .replace("'", "")
         )
 
+        topic_name = f"com.udacity.cta.stations"
         super().__init__(
+            topic_name=topic_name,
             key_schema=Station.key_schema,
             value_schema=Station.value_schema,
             num_partitions=1,
@@ -42,11 +44,12 @@ class Station(Producer):
 
     def run(self, train, direction, prev_station_id, prev_direction):
         """Simulates train arrivals at this station"""
-        logger.info("arrival kafka integration incomplete - skipping")
+        logger.info(f"produce arrival, topic {self.topic_name}, {str(self)}")
         self.producer.produce(
             topic=self.topic_name,
             key={"timestamp": self.time_millis()},
             value={
+                "station_id": self.station_id,
                 "train_id": train.train_id,
                 "direction": direction,
                 "line": self.color.name,

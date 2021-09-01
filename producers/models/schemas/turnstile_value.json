@@ -5,7 +5,7 @@
   "fields": [
     {
       "name": "station_id",
-      "type": "integer"
+      "type": "int"
     },
     {
       "name": "station_name",

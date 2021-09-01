@@ -6,10 +6,9 @@ from enum import IntEnum
 from pathlib import Path
 
 import requests
-from confluent_kafka import avro
 
 from .producer import Producer
-from ..config import KAFKA_REST_PROXY_URL
+from models.config import KAFKA_REST_PROXY_URL
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +31,7 @@ class Weather(Producer):
         super().__init__(
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
+            topic_name="com.udacity.rest_proxy.weather",
         )
 
         self.status = Weather.status.sunny
@@ -65,14 +65,15 @@ class Weather(Producer):
             url=f"{Weather.rest_proxy_url}/topics/{self.topic_name}",
             headers={
                 "Content-Type": "application/vnd.kafka.avro.v2+json",
-                "Accept": "application/vnd.kafka.v2+json"
             },
             data=json.dumps({
-                "key_schema": Weather.key_schema,
-                "value_schema": Weather.value_schema,
+                "key_schema": json.dumps(Weather.key_schema),
+                "value_schema": json.dumps(Weather.value_schema),
                 "records": [
                     {
-                        "key": self.time_millis(),
+                        "key": {
+                            "timestamp": self.time_millis(),
+                        },
                         "value": {
                             "temperature": self.temp,
                             "status": self.status.name,

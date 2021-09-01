@@ -18,7 +18,11 @@ def configure_connector():
     if resp.status_code == 200:
         logging.debug("connector already created skipping recreation")
         return
-    response = requests.post(
+
+    # Using the JDBC Source Connector to connect to Postgres. Load the `stations` table
+    # using incrementing mode, with `stop_id` as the incrementing column name.
+
+    resp = requests.post(
         KAFKA_CONNECT_URL,
         headers={"Content-Type": "application/json"},
         data=json.dumps({
@@ -30,18 +34,27 @@ def configure_connector():
                 "value.converter": "org.apache.kafka.connect.json.JsonConverter",
                 "value.converter.schemas.enable": "false",
                 "batch.max.rows": "500",
-                "connection.url": "jdbc:postgresql://localhost:5432/cta",
+                "connection.url": "jdbc:postgresql://postgres:5432/cta",
                 "connection.user": "cta_admin",
                 "connection.password": "chicago",
                 "table.whitelist": "stations",
                 "mode": "incrementing",
                 "incrementing.column.name": "stop_id",
-                "topic.prefix": "org.chicago.",
-                "poll.interval.ms": "6000",
+                # Using appropriate topic prefix
+                "topic.prefix": "com.udacity.jdbc.postgresql.",
+                "poll.interval.ms": 10000,
             }
         }),
     )
-    response.raise_for_status()
+
+    try:
+        resp.raise_for_status()
+    except:
+        print(f"failed creating connector: {json.dumps(resp.json(), indent=2)}")
+        exit(1)
+
+    logging.debug("connector created successfully")
+    return
 
 
 if __name__ == "__main__":
