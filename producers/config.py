@@ -1,0 +1,2 @@
+KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
+KAFKA_SCHEMA_REGISTRY_URL = "http://localhost:8081"

@@ -25,9 +25,7 @@ class Station(Producer):
                 .replace("'", "")
         )
 
-        topic_name = f"{self.value_schema.namespace}.{self.value_schema.name.replace('.value', '')}"
         super().__init__(
-            topic_name,
             key_schema=Station.key_schema,
             value_schema=Station.value_schema,
             num_partitions=1,

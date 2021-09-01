@@ -2,9 +2,10 @@
 import logging
 import time
 
-from confluent_kafka import avro
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroProducer
+
+from ..config import KAFKA_BOOTSTRAP_SERVER, KAFKA_SCHEMA_REGISTRY_URL
 
 logger = logging.getLogger(__name__)
 
@@ -17,22 +18,25 @@ class Producer:
 
     def __init__(
             self,
-            topic_name,
             key_schema,
             value_schema=None,
+            topic_name=None,
             num_partitions=1,
             num_replicas=1,
     ):
         """Initializes a Producer object with basic settings"""
-        self.topic_name = topic_name
         self.key_schema = key_schema
         self.value_schema = value_schema
         self.num_partitions = num_partitions
         self.num_replicas = num_replicas
+        if topic_name is None:
+            self.topic_name = f"{self.value_schema.namespace}.{self.value_schema.name.replace('.value', '')}"
+        else:
+            self.topic_name = topic_name
 
         self.broker_properties = {
-            "bootstrap.servers": "localhost:9092",
-            "schema.registry.url": "http://localhost:8081",
+            "bootstrap.servers": KAFKA_BOOTSTRAP_SERVER,
+            "schema.registry.url": KAFKA_SCHEMA_REGISTRY_URL,
         }
 
         # If the topic does not already exist, try to create it
