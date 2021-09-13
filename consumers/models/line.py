@@ -55,15 +55,15 @@ class Line:
 
     def process_message(self, message):
         """Given a kafka message, extract data"""
-        if message.topic() == "com.udacity.transformation.stations":
+        if message.topic() == "org.chicago.cta.stations.table.v1":
             try:
                 value = json.loads(message.value())
                 self._handle_station(value)
             except Exception as e:
                 logger.fatal("bad station? %s, %s", value, e)
-        elif message.topic() == "com.udacity.cta.stations":
+        elif message.topic() == "org.chicago.cta.station.arrivals":
             self._handle_arrival(message)
-        elif "TURNSTILE_SUMMARY" in message.topic():
+        elif message.topic() == "TURNSTILE_SUMMARY":
             json_data = json.loads(message.value())
             station_id = json_data.get("STATION_ID")
             station = self.stations.get(station_id)

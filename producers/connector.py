@@ -7,7 +7,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 KAFKA_CONNECT_URL = "http://localhost:8083/connectors"
-CONNECTOR_NAME = "jdbc_cta_stations"
+CONNECTOR_NAME = "stations"
 
 
 def configure_connector():
@@ -41,19 +41,20 @@ def configure_connector():
                 "mode": "incrementing",
                 "incrementing.column.name": "stop_id",
                 # Using appropriate topic prefix
-                "topic.prefix": "com.udacity.jdbc.postgresql.",
-                "poll.interval.ms": 10000,
+                "topic.prefix": "jdbc.",
+                "poll.interval.ms": 1000,
             }
         }),
     )
+    # print(resp.content)
 
     try:
         resp.raise_for_status()
     except:
-        print(f"failed creating connector: {json.dumps(resp.json(), indent=2)}")
+        logging.info(f"failed creating connector: {json.dumps(resp.json(), indent=2)}")
         exit(1)
 
-    logging.debug("connector created successfully")
+    logging.info("connector created successfully")
     return
 
 

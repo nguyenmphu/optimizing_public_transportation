@@ -31,7 +31,7 @@ class Weather(Producer):
         super().__init__(
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
-            topic_name="com.udacity.rest_proxy.weather",
+            topic_name="org.chicago.cta.weather.v1",
         )
 
         self.status = Weather.status.sunny
